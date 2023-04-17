@@ -7,22 +7,25 @@ public class Clock extends Thread {
     private Duration maxTime, remainingTimeP1, remainingTimeP2;
     private Instant beginningMoment;
     private boolean runningGame;
+    private int initialPlayer;
 
-    public Clock(Duration maxTime, Duration remainingTimeP1, Duration remainingTimeP2) {
+    public Clock(Duration maxTime, int initialPlayer) {
         this.maxTime = maxTime;
-        this.remainingTimeP1 = remainingTimeP1;
-        this.remainingTimeP2 = remainingTimeP2;
         this.runningGame = false;
+        this.initialPlayer = initialPlayer;
     }
 
     // Inicia o relógio da partida, sobrescrevendo o método padrão da classe Thread
-    @Override
     public void run() {
-        beginningMoment = Instant.now();
-        runningGame = true;
+        // Verifica qual jogador terá o tempo iniciado
+        if (initialPlayer == 0) {
+            remainingTimeP1 = maxTime;
+        } else {
+            remainingTimeP2 = maxTime;
+        }
 
         // Verifica o tempo restante de cada jogador
-        while (remainingTimeP1.compareTo(Duration.ZERO) > 0 && remainingTimeP2.compareTo(Duration.ZERO) > 0) {
+        while (remainingTimeP1.compareTo(Duration.ZERO) > 0 || remainingTimeP2.compareTo(Duration.ZERO) > 0) {
 
             // Verifica se o jogo está em andamento
             if (runningGame) {
